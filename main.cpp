@@ -86,52 +86,6 @@ class Cell{
 		
 	}
 	
-	void checkCollide(vector<Cell> cells, int j){
-		
-		for (int i = 0; i < (int)cells.size(); i++){
-			if (i != j){				
-				float b1x = this->x - this->r;
-				float b1y = this->y - this->r;
-				float b1w = this->x + 2 * this->r;
-				float b1h = this->y + 2 * this->r;
-
-				float b2x = cells[i].x - cells[i].r;
-				float b2y = cells[i].y - cells[i].r;
-				float b2w = cells[i].x + 2 * cells[i].r;
-				float b2h = cells[i].y + 2 * cells[i].r;	
-				
-				if (b1x < b2x + b2w && b1x + b1w > b2y && b1y < b2y + b2h && b1y + b1h > b2y){
-					
-					int b1right = b1x + b1w;
-					int b1bottom = b1y + b1h;
-					
-					int b2right = b2x + b2w;
-					int b2bottom = b2y + b2h;					
-					
-					int ctop = b1bottom - b2y;
-					int cbottom = b2bottom - b1y;
-					int cleft = b1right - b2x;
-					int cright = b2right - b1x;
-					
-					if (ctop < cbottom && ctop < cleft && ctop < cright){
-						this->y = b2y - this->r;
-					}
-					if (cbottom < ctop && cbottom < cleft && cbottom < cright){
-						this->y = b2y + b2h + this->r;
-					}
-					if (cleft < cbottom && cleft < cright && cleft < cright){
-						this->x = b2x - this->r;
-					}
-					if (cright < cbottom && cright < cleft && cright < cleft){
-						this->x = b2x + b2w + this->r;
-					}					
-				}
-				
-			}
-		}
-	}
-	
-	
 	void draw(){
 		filledCircleRGBA(ren, this->x, this->y, this->r, this->c.r, this->c.g, this->c.b, 160);
 	}
@@ -151,10 +105,8 @@ int main(int argc, char *argv[]){
 		SDL_PollEvent(&event);
 		SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 		SDL_RenderClear(ren);
-		
 		for (int i = 0; i < (int)cells.size(); i++){
-				
-
+			
 			if (cells[i].clicked()){
 				
 				cells.push_back(cells[i].getSubCell()[0]);
@@ -163,20 +115,14 @@ int main(int argc, char *argv[]){
 		
 			}
 			cells[i].update();
-//			cells[i].checkCollide(cells, i);
 			cells[i].draw();			
-		}
-		
-
-		
-			
+		}	
 		SDL_RenderPresent(ren);
 		SDL_Delay(1000 / 60); // FPS
 		
 		if (event.type == SDL_QUIT){
 			isRunning = false;
 		}
-		
 		cout<<(int)cells.size()<<endl;
 	}
 	
